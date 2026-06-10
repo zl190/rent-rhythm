@@ -146,7 +146,7 @@ function render(skipId) {
   const wm = ppy("week", st.basis) / ppy("month", st.basis); // weeks per month
   const wy = ppy("week", st.basis);                           // weeks per year
   document.getElementById("factor").innerHTML =
-    `Month = Week × <b>${wm.toFixed(2)}</b> &nbsp;·&nbsp; Year = Week × <b>${wy.toFixed(st.basis === "365" ? 2 : 0)}</b> &nbsp;(not ×4)`;
+    `Month = Week × <b>${wm.toFixed(2)}</b> <span style="opacity:.75">(not ×4)</span> &nbsp;·&nbsp; Year = Week × <b>${wy.toFixed(st.basis === "365" ? 2 : 0)}</b>`;
   // rows
   PERIODS.forEach((p) => {
     document.getElementById("row-" + p.id).classList.toggle("anchored", p.id === st.anchor);
