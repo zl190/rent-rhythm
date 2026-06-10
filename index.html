@@ -10,21 +10,25 @@
 <style>
   :root {
     --bg:#0b0d12; --panel:#11151c; --panel-2:#161b24; --line:#222a36;
-    --text:#e6edf3; --muted:#8b98a9; --accent:#56d364; --warn:#e3b341;
+    --text:#e6edf3; --muted:#8b98a9; --accent:#56d364; --warn:#e3b341; --neg:#f0594f;
   }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body { margin:0; background:var(--bg); color:var(--text);
     font:16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   body { padding: max(16px, env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom));
     max-width:460px; margin:0 auto; }
-  h1 { font-size:21px; margin:0 0 2px; letter-spacing:-0.01em; }
-  .tagline { color:var(--muted); font-size:13px; margin:0 0 16px; }
+  h1 { font-size:21px; margin:0 0 12px; letter-spacing:-0.01em; }
 
+  .tabs { display:flex; gap:6px; margin:0 0 16px; }
+  .tabs button { flex:1; padding:9px; border-radius:10px; border:1px solid var(--line);
+    background:var(--panel-2); color:var(--muted); font-size:13px; cursor:pointer; }
+  .tabs button.on { background:var(--accent); color:#0b0d12; border-color:var(--accent); font-weight:600; }
+
+  .tagline { color:var(--muted); font-size:13px; margin:0 0 14px; }
   .factor { color:var(--muted); font-size:12px; margin:0 2px 3px; }
   .factor b { color:var(--accent); font-weight:600; }
   .note { color:var(--muted); font-size:11px; opacity:.7; margin:0 2px 14px; }
 
-  /* the under-count, quantified — neutral, applies to anyone doing rough math */
   .warn { display:none; margin:0 0 16px; padding:10px 12px; border-radius:11px;
     border:1px solid #5a4a1e; background:#1c1707; color:var(--warn); font-size:12.5px; line-height:1.55; }
   .warn b { color:#f0c552; font-weight:700; }
@@ -41,11 +45,8 @@
     border:1px solid var(--line); background:var(--panel); color:var(--text);
     font-size:18px; font-variant-numeric:tabular-nums; text-align:right; }
   .amt input:focus { outline:none; border-color:var(--accent); }
-
-  /* tier 1 (Week / Month / Year) = first-class: brighter label, bigger number */
   .row.t1 .lab { color:var(--text); font-size:15px; font-weight:600; }
   .row.t1 .amt input { font-size:22px; }
-  /* tier 2 (Fortnight / Day / Quarter) = secondary, folded */
   .row.t2 .lab { font-size:13px; }
   .row.t2 .amt input { font-size:16px; }
 
@@ -54,11 +55,48 @@
     font-size:12.5px; cursor:pointer; text-align:left; }
   .more:hover { color:var(--text); border-color:var(--muted); }
 
+  /* cashflow view */
+  .net { text-align:center; margin:2px 0 14px; }
+  .net .nlbl { color:var(--muted); font-size:12px; }
+  .net .val { font-size:30px; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-0.02em; }
+  .net .val.pos { color:var(--accent); }
+  .net .val.neg { color:var(--neg); }
+  .net .sub { color:var(--muted); font-size:12px; margin-top:3px; }
+  .period-pick { display:flex; gap:6px; justify-content:center; margin:0 0 18px; }
+  .period-pick button { padding:6px 14px; border-radius:999px; border:1px solid var(--line);
+    background:var(--panel-2); color:var(--muted); font-size:12px; cursor:pointer; }
+  .period-pick button.on { color:var(--text); border-color:var(--muted); }
+  .flow-section { margin:0 0 18px; }
+  .flow-section h3 { font-size:12px; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--muted); margin:0 2px 8px; }
+  .entry { background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:10px 12px; margin-bottom:8px; }
+  .entry .top { display:flex; gap:8px; align-items:center; }
+  .entry .top input.label { flex:1; background:transparent; border:none; color:var(--text);
+    font-size:14px; padding:2px 0; }
+  .entry .top input.label:focus { outline:none; }
+  .entry .del { width:26px; height:26px; border:none; background:transparent; color:var(--muted);
+    font-size:17px; cursor:pointer; border-radius:6px; }
+  .entry .del:hover { background:var(--panel-2); color:var(--neg); }
+  .entry .bot { display:flex; gap:8px; margin-top:7px; }
+  .entry .amt2 { position:relative; flex:1; }
+  .entry .amt2 .cur { position:absolute; left:9px; top:50%; transform:translateY(-50%);
+    color:var(--muted); font-size:13px; pointer-events:none; }
+  .entry .amt2 input { width:100%; padding:7px 9px 7px 20px; border-radius:8px;
+    border:1px solid var(--line); background:var(--panel-2); color:var(--text);
+    font-size:14px; text-align:right; font-variant-numeric:tabular-nums; }
+  .entry select { padding:7px 9px; border-radius:8px; border:1px solid var(--line);
+    background:var(--panel-2); color:var(--text); font-size:13px; }
+  .entry input:focus, .entry select:focus { outline:none; border-color:var(--accent); }
+  .add { width:100%; padding:9px; border-radius:10px; border:1px dashed var(--line);
+    background:transparent; color:var(--muted); font-size:13px; cursor:pointer; }
+  .add:hover { color:var(--text); border-color:var(--muted); }
+
   .foot { margin-top:16px; display:flex; gap:10px; }
   .foot button { flex:1; padding:10px; border-radius:10px; border:1px solid var(--line);
     background:var(--panel-2); color:var(--muted); font-size:13px; cursor:pointer; }
   .foot button:active { transform:scale(.98); }
-  .cur-pick { margin:14px 2px 16px; display:flex; gap:8px; align-items:center; }
+  .cur-pick { margin:14px 2px 2px; display:flex; gap:8px; align-items:center; }
   .cur-pick label { color:var(--muted); font-size:12px; }
   .cur-pick input { width:48px; padding:5px 8px; border-radius:8px; border:1px solid var(--line);
     background:var(--panel-2); color:var(--text); font-size:13px; text-align:center; }
@@ -66,28 +104,56 @@
 </head>
 <body>
   <h1>RentRhythm</h1>
-  <p class="tagline">One rent or income, in the period you actually think in. (A month isn't 4 weeks.)</p>
 
-  <div class="factor" id="factor"></div>
-  <div class="note">1 year = 52 weeks (the rental standard)</div>
-  <div class="warn" id="warn"></div>
+  <div class="tabs" id="tabs">
+    <button data-tab="quick">Quick convert</button>
+    <button data-tab="cashflow">My cashflow</button>
+  </div>
+
+  <!-- QUICK CONVERT -->
+  <div id="view-quick">
+    <p class="tagline">One rent or income, in the period you actually think in. (A month isn't 4 weeks.)</p>
+    <div class="factor" id="factor"></div>
+    <div class="note">1 year = 52 weeks (the rental standard)</div>
+    <div class="warn" id="warn"></div>
+    <div id="rows-primary"></div>
+    <button class="more" id="moreBtn"></button>
+    <div id="rows-secondary" hidden></div>
+  </div>
+
+  <!-- MY CASHFLOW -->
+  <div id="view-cashflow" hidden>
+    <div class="net">
+      <div class="nlbl">Net</div>
+      <div class="val" id="netVal"></div>
+      <div class="sub" id="netSub"></div>
+    </div>
+    <div class="period-pick" id="periodPick">
+      <button data-p="week">per week</button>
+      <button data-p="month">per month</button>
+      <button data-p="year">per year</button>
+    </div>
+    <section class="flow-section">
+      <h3>Income</h3>
+      <div class="entries" id="entries-in"></div>
+      <button class="add" data-flow="in">+ Add income</button>
+    </section>
+    <section class="flow-section">
+      <h3>Expenses</h3>
+      <div class="entries" id="entries-out"></div>
+      <button class="add" data-flow="out">+ Add expense</button>
+    </section>
+  </div>
 
   <div class="cur-pick">
     <label for="cur">Symbol</label>
     <input id="cur" value="$" maxlength="3" />
   </div>
-
-  <div id="rows-primary"></div>
-  <button class="more" id="moreBtn"></button>
-  <div id="rows-secondary" hidden></div>
-
   <div class="foot">
     <button id="reset">Reset</button>
   </div>
 
 <script>
-// Tier 1 = first-class (the killer path: weekly quote ⇄ monthly ⇄ yearly).
-// Tier 2 = folded by default. Fortnight kept because AU pays wages/benefits fortnightly.
 const PERIODS = [
   { id:"week",      lab:"Week",      sub:"per week",           tier:1 },
   { id:"month",     lab:"Month",     sub:"per calendar month", tier:1 },
@@ -99,7 +165,6 @@ const PERIODS = [
 const KEY = "rentrhythm.state";
 const WPY = 52, DPY = 364;   // 1 year = 52 weeks = 364 days (rental standard)
 
-// How many of this period fit in a year — the entire conversion model.
 function ppy(id) {
   switch (id) {
     case "day":       return DPY;
@@ -111,24 +176,39 @@ function ppy(id) {
   }
 }
 
+const uid = () => "e" + Math.random().toString(36).slice(2, 8);
+function seedEntries() {
+  return [
+    { id: uid(), label: "Salary", amount: 2000, period: "fortnight", flow: "in" },
+    { id: uid(), label: "Rent",   amount: 600,  period: "week",      flow: "out" }
+  ];
+}
+
 let st = loadState();
 function loadState() {
   try {
     const s = JSON.parse(localStorage.getItem(KEY));
     if (s && typeof s.annual !== "undefined") {
-      if (typeof s.expanded === "undefined") s.expanded = false;
-      return { annual: s.annual, cur: s.cur || "$", expanded: s.expanded };
+      return {
+        tab: s.tab || "quick",
+        cur: s.cur || "$",
+        annual: s.annual,
+        expanded: !!s.expanded,
+        entries: Array.isArray(s.entries) ? s.entries : seedEntries(),
+        displayPeriod: s.displayPeriod || "month"
+      };
     }
   } catch (e) {}
-  return { annual: 600 * 52, cur: "$", expanded: false };   // seed: $600/week
+  return { tab: "quick", cur: "$", annual: 600 * 52, expanded: false, entries: seedEntries(), displayPeriod: "month" };
 }
 function save() { localStorage.setItem(KEY, JSON.stringify(st)); }
 
 const fmt = (n) => (!isFinite(n) || n === null)
   ? "" : n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const parse = (s) => { const v = parseFloat(String(s).replace(/[^0-9.]/g, "")); return isFinite(v) ? v : null; };
+const findEntry = (id) => st.entries.find((x) => x.id === id);
 
-// Build rows into their tier containers
+// ---------- QUICK CONVERT ----------
 const primaryEl = document.getElementById("rows-primary");
 const secondaryEl = document.getElementById("rows-secondary");
 PERIODS.forEach((p) => {
@@ -145,24 +225,19 @@ PERIODS.forEach((p) => {
     const v = parse(inp.value);
     st.annual = v === null ? null : v * ppy(p.id);
     save();
-    render(p.id);            // don't overwrite the field being typed
+    renderQuick(p.id);
   });
 });
 
-function render(skipId) {
-  document.querySelectorAll(".amt .cur").forEach((c) => (c.textContent = st.cur));
-  document.getElementById("cur").value = st.cur;
-
+function renderQuick(skipId) {
   document.getElementById("factor").innerHTML =
     `Month = Week × <b>${(WPY / 12).toFixed(2)}</b> &nbsp;·&nbsp; Year = Week × <b>${WPY}</b>`;
-
-  // quantify the rough ×4 mental shortcut — it always under-counts (×4 = 48 wks/yr)
-  const W = st.annual === null ? null : st.annual / WPY;   // weekly amount
+  const W = st.annual === null ? null : st.annual / WPY;
   const warnEl = document.getElementById("warn");
   if (W && W > 0) {
-    const monthDiff = W * (WPY / 12 - 4);     // real month − naive (week×4)
-    const yearDiff  = W * (WPY - 48);         // real year − naive (×4×12) = exactly 4 weeks
-    const pct = (WPY - 48) / WPY * 100;       // under-count vs the true amount = 7.7%
+    const monthDiff = W * (WPY / 12 - 4);
+    const yearDiff  = W * (WPY - 48);
+    const pct = (WPY - 48) / WPY * 100;
     warnEl.style.display = "block";
     warnEl.innerHTML =
       `⚠️ A rough ×4 under-counts by <b>${st.cur}${fmt(monthDiff)}</b>/mo · ` +
@@ -171,30 +246,99 @@ function render(skipId) {
   } else {
     warnEl.style.display = "none";
   }
-
   secondaryEl.hidden = !st.expanded;
   document.getElementById("moreBtn").textContent =
     st.expanded ? "▾  Less" : "▸  More — Fortnight · Day · Quarter";
-
   PERIODS.forEach((p) => {
     if (p.id === skipId) return;
-    const inp = document.getElementById("in-" + p.id);
-    inp.value = st.annual === null ? "" : fmt(st.annual / ppy(p.id));
+    document.getElementById("in-" + p.id).value =
+      st.annual === null ? "" : fmt(st.annual / ppy(p.id));
   });
 }
-
 document.getElementById("moreBtn").addEventListener("click", () => {
-  st.expanded = !st.expanded; save(); render();
+  st.expanded = !st.expanded; save(); renderQuick();
 });
+
+// ---------- MY CASHFLOW ----------
+function annualOf(flow) {
+  return st.entries.filter((e) => e.flow === flow)
+    .reduce((s, e) => s + (e.amount || 0) * ppy(e.period), 0);
+}
+function updateNet() {
+  const inA = annualOf("in"), outA = annualOf("out"), netA = inA - outA;
+  const d = ppy(st.displayPeriod);
+  const per = st.displayPeriod === "week" ? "/wk" : st.displayPeriod === "year" ? "/yr" : "/mo";
+  const valEl = document.getElementById("netVal");
+  valEl.textContent = (netA < 0 ? "−" + st.cur + fmt(-netA / d) : st.cur + fmt(netA / d)) + " " + per;
+  valEl.className = "val " + (netA >= 0 ? "pos" : "neg");
+  document.getElementById("netSub").textContent =
+    `In ${st.cur}${fmt(inA / d)} · Out ${st.cur}${fmt(outA / d)} ${per}`;
+  document.querySelectorAll("#periodPick button").forEach((b) =>
+    b.classList.toggle("on", b.dataset.p === st.displayPeriod));
+}
+function entryRow(e) {
+  const div = document.createElement("div");
+  div.className = "entry";
+  div.innerHTML =
+    `<div class="top"><input class="label" placeholder="${e.flow === "in" ? "e.g. Salary" : "e.g. Rent"}" />` +
+    `<button class="del" title="Remove">×</button></div>` +
+    `<div class="bot"><span class="amt2"><span class="cur"></span>` +
+    `<input class="eamt" inputmode="decimal" placeholder="0.00" /></span>` +
+    `<select class="eperiod">${PERIODS.map((p) => `<option value="${p.id}">${p.lab}</option>`).join("")}</select></div>`;
+  div.querySelector(".label").value = e.label;
+  div.querySelector(".eamt").value = e.amount ? fmt(e.amount) : "";
+  div.querySelector(".eperiod").value = e.period;
+  div.querySelector(".cur").textContent = st.cur;
+  div.querySelector(".label").addEventListener("input", (ev) => { const x = findEntry(e.id); if (x) { x.label = ev.target.value; save(); } });
+  div.querySelector(".eamt").addEventListener("input", (ev) => { const x = findEntry(e.id); if (x) { x.amount = parse(ev.target.value) || 0; save(); updateNet(); } });
+  div.querySelector(".eperiod").addEventListener("change", (ev) => { const x = findEntry(e.id); if (x) { x.period = ev.target.value; save(); updateNet(); } });
+  div.querySelector(".del").addEventListener("click", () => { st.entries = st.entries.filter((x) => x.id !== e.id); save(); renderCashflow(true); });
+  return div;
+}
+function renderCashflow(rebuild) {
+  updateNet();
+  if (rebuild) {
+    document.getElementById("entries-in").replaceChildren(...st.entries.filter((e) => e.flow === "in").map(entryRow));
+    document.getElementById("entries-out").replaceChildren(...st.entries.filter((e) => e.flow === "out").map(entryRow));
+  }
+}
+document.querySelectorAll(".add").forEach((b) =>
+  b.addEventListener("click", () => {
+    const flow = b.dataset.flow;
+    st.entries.push({ id: uid(), label: "", amount: 0, period: flow === "in" ? "fortnight" : "week", flow });
+    save(); renderCashflow(true);
+    const list = document.getElementById(flow === "in" ? "entries-in" : "entries-out");
+    const last = list.lastElementChild; if (last) last.querySelector(".label").focus();
+  }));
+document.querySelectorAll("#periodPick button").forEach((b) =>
+  b.addEventListener("click", () => { st.displayPeriod = b.dataset.p; save(); updateNet(); }));
+
+// ---------- shared: tabs, currency, reset ----------
+function applyTab() {
+  document.getElementById("view-quick").hidden = st.tab !== "quick";
+  document.getElementById("view-cashflow").hidden = st.tab !== "cashflow";
+  document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("on", b.dataset.tab === st.tab));
+}
+document.querySelectorAll("#tabs button").forEach((b) =>
+  b.addEventListener("click", () => { st.tab = b.dataset.tab; save(); applyTab(); }));
 document.getElementById("cur").addEventListener("input", (e) => {
   st.cur = e.target.value || ""; save();
-  render(document.activeElement && document.activeElement.id ? null : undefined);
+  document.querySelectorAll(".cur").forEach((c) => (c.textContent = st.cur));
+  document.getElementById("cur").value = st.cur;
+  updateNet();
 });
 document.getElementById("reset").addEventListener("click", () => {
-  st = { annual: 600 * 52, cur: st.cur, expanded: st.expanded }; save(); render();
+  if (st.tab === "quick") { st.annual = 600 * 52; }
+  else { st.entries = seedEntries(); st.displayPeriod = "month"; }
+  save(); renderQuick(); renderCashflow(true);
 });
 
-render();
+// ---------- init ----------
+document.getElementById("cur").value = st.cur;
+document.querySelectorAll(".cur").forEach((c) => (c.textContent = st.cur));
+renderQuick();
+renderCashflow(true);
+applyTab();
 
 if ("serviceWorker" in navigator) {
   addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
