@@ -62,8 +62,8 @@
   .net .val.pos { color:var(--accent); }
   .net .val.neg { color:var(--neg); }
   .net .sub { color:var(--muted); font-size:12px; margin-top:3px; }
-  .period-pick { display:flex; gap:6px; justify-content:center; margin:0 0 18px; }
-  .period-pick button { padding:6px 14px; border-radius:999px; border:1px solid var(--line);
+  .period-pick { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:0 0 18px; }
+  .period-pick button { padding:6px 13px; border-radius:999px; border:1px solid var(--line);
     background:var(--panel-2); color:var(--muted); font-size:12px; cursor:pointer; }
   .period-pick button.on { color:var(--text); border-color:var(--muted); }
   .flow-section { margin:0 0 18px; }
@@ -129,9 +129,10 @@
       <div class="sub" id="netSub"></div>
     </div>
     <div class="period-pick" id="periodPick">
-      <button data-p="week">per week</button>
-      <button data-p="month">per month</button>
-      <button data-p="year">per year</button>
+      <button data-p="week">Week</button>
+      <button data-p="fortnight">Fortnight</button>
+      <button data-p="month">Month</button>
+      <button data-p="year">Year</button>
     </div>
     <section class="flow-section">
       <h3>Income</h3>
@@ -267,7 +268,7 @@ function annualOf(flow) {
 function updateNet() {
   const inA = annualOf("in"), outA = annualOf("out"), netA = inA - outA;
   const d = ppy(st.displayPeriod);
-  const per = st.displayPeriod === "week" ? "/wk" : st.displayPeriod === "year" ? "/yr" : "/mo";
+  const per = { week: "/wk", fortnight: "/fn", month: "/mo", quarter: "/qtr", year: "/yr" }[st.displayPeriod] || "/mo";
   const valEl = document.getElementById("netVal");
   valEl.textContent = (netA < 0 ? "−" + st.cur + fmt(-netA / d) : st.cur + fmt(netA / d)) + " " + per;
   valEl.className = "val " + (netA >= 0 ? "pos" : "neg");
